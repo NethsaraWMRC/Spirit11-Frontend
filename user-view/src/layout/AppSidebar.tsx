@@ -14,6 +14,8 @@ import {
   PlugInIcon,
   TableIcon,
   UserCircleIcon,
+  GroupIcon,
+  ShootingStarIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
@@ -27,11 +29,31 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
+    icon: <ShootingStarIcon />,
+    name: "LeaderBoard",
+    path: "/leader-board",
+  },
+  {
+    icon: <GroupIcon />,
+    name: "My Team",
+    path: "/my-team",
+  },
+  {
     icon: <GridIcon />,
     name: "Dashboard",
     subItems: [{ name: "Ecommerce", path: "/", pro: false }],
   },
+
+
   {
+    icon: <CalenderIcon />,
+    name: "Select Players",
+    path: "/select-players",
+  },
+
+
+  { 
+
     icon: <CalenderIcon />,
     name: "Calendar",
     path: "/calendar",
@@ -51,6 +73,7 @@ const navItems: NavItem[] = [
     icon: <TableIcon />,
     subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
   },
+
   {
     name: "Pages",
     icon: <PageIcon />,
