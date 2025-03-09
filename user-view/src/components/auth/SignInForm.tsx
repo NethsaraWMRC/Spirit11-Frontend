@@ -52,7 +52,7 @@ export default function SignInForm() {
         login(response?.data?.accessToken, response?.data?.username);
         navigate("/");
       } else {
-        console.error("Login failed: Invalid response");
+        alert("Login failed: User not found");
       }
     } catch (error) {
       console.error("Login failed:", error);
