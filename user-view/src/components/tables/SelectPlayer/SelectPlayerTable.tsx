@@ -48,7 +48,7 @@ export default function PlayersTable() {
   const [budget, setBudget] = useState(9000000); // Initial budget of 9,000,000
 
   // Fixed User ID as provided (MongoDB ObjectId)
-  const userId = "67cd476348af168023178dcd";
+  const userId = "67cd35d58c7d16809050b942";
 
   // Fetch all players and user's team when component mounts
   useEffect(() => {

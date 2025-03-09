@@ -95,8 +95,24 @@ export default function UsersTeamTable() {
         setSelectedPlayer(null);
     };
 
+    const totalValue = tableData.reduce((sum, order) => sum + parseFloat(order.value.replace('K', '')) * 1000, 0);
+    const remainingBudget = 9000000 - totalValue;
+    const playerCount = tableData.length;
+
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+            {/* Budget and Player Count Display */}
+            <div className="p-4 border-b border-gray-100 dark:border-white/[0.05] flex flex-wrap gap-3 items-center justify-between">
+                <div className="font-medium text-gray-700 dark:text-white/90">
+                    Remaining Budget: <span className="text-green-600 dark:text-green-400">Rs. {remainingBudget.toLocaleString()}</span>
+                </div>
+                <div className="font-medium text-gray-700 dark:text-white/90">
+                    Players:<span
+                        className="text-blue-500"
+
+                    > {playerCount}/11</span>
+                </div>
+            </div>
             {/* Search and Filter Controls */}
             <div className="p-4 border-b border-gray-100 dark:border-white/[0.05] flex flex-wrap gap-3 items-center justify-between">
                 <div className="relative">
@@ -234,7 +250,7 @@ export default function UsersTeamTable() {
                                                 </Badge>
                                             </TableCell>
                                             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                                                {order.value}
+                                                Rs. {order.value}
                                             </TableCell>
                                             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                                 <button
