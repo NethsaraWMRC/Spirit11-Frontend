@@ -11,13 +11,12 @@ import Players from "./pages/Players";
 
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/common/ProtectedRoute";
-
+import NotFound from "./pages/OtherPage/NotFound";
 
 export default function App() {
   return (
     <>
       <Router>
-
         <AuthProvider>
           <ScrollToTop />
           <Routes>
@@ -28,18 +27,13 @@ export default function App() {
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
               <Route element={<AppLayout />}>
-                <Route index path="/" element={<Home />} />
-                <Route path="/tournementSummary" element={<Tournement />} />
+                <Route path="/" element={<Tournement />} />
                 <Route path="/players" element={<Players />} />
-               
+                <Route path="*" element={<NotFound />} />
               </Route>
             </Route>
-
-            {/* Fallback Route */}
-            <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
-
       </Router>
     </>
   );
