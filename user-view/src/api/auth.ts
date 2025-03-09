@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const base_url = "http://localhost:5000/api/auth/";
+const base_url = "http://localhost:5000/api/auth";
 
 export const loginUser = async (username: string, password: string) => {
   try {
@@ -16,7 +16,7 @@ export const loginUser = async (username: string, password: string) => {
 
 export const registerUser = async (username: string, password: string) => {
   try {
-    const response = await axios.post(base_url + "/register", {
+    const response = await axios.post(base_url + "/user/registration", {
       username,
       password,
     });
