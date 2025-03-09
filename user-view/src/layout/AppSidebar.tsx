@@ -16,6 +16,7 @@ import {
   UserCircleIcon,
   GroupIcon,
   ShootingStarIcon,
+  DollarLineIcon
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
@@ -35,7 +36,12 @@ const navItems: NavItem[] = [
   },
   {
     icon: <GroupIcon />,
-    name: "My Team",
+    name: "Select Players",
+    path: "/select-players",
+  },
+  {
+    icon: <DollarLineIcon />,
+    name: "Budget View",
     path: "/my-team",
   },
   {
@@ -43,15 +49,6 @@ const navItems: NavItem[] = [
     name: "Dashboard",
     subItems: [{ name: "Ecommerce", path: "/", pro: false }],
   },
-
-
-  {
-    icon: <CalenderIcon />,
-    name: "Select Players",
-    path: "/select-players",
-  },
-
-
   { 
 
     icon: <CalenderIcon />,

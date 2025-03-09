@@ -29,7 +29,7 @@ const PlayerPopUp: React.FC<ViewDetailsModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
       {/* Backdrop with blur effect */}
       <div
-        className="fixed inset-0 backdrop-blur-sm bg-black bg-opacity-60"
+        className="fixed inset-0 backdrop-blur-sm bg-opacity-60"
         onClick={onClose}
         style={{ backdropFilter: "blur(4px)" }}
       ></div>
