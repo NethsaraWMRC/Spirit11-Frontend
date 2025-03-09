@@ -1,10 +1,16 @@
-import axios from 'axios';
+import axios from "axios";
 
 const base_url = "http://localhost:5000/api";
 
-export const getUserTeam = async (userId: string) => {
+export const getUserTeam = async () => {
   try {
-    const response = await axios.get(`${base_url}/team/get-user-team/${userId}`);
+    const accessToken = localStorage.getItem("accessToken");
+
+    const response = await axios.get(`${base_url}/team/get-user-team`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Request failed:", error);

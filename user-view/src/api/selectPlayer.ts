@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
 // Interface for the original player data format
@@ -30,14 +31,26 @@ interface PlayerMapped {
   "Runs Conceded": number;
 }
 
+const API_BASE_URL = "http://localhost:5000/api";
+
+const getAuthHeaders = () => {
+  const accessToken = localStorage.getItem("accessToken");
+  return {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  };
+};
+
 export const getAllPlayers = async (): Promise<PlayerMapped[] | null> => {
   try {
     const response = await axios.get<PlayerOriginal[]>(
-      "http://localhost:5000/api/players/get-all"
+      `${API_BASE_URL}/players/get-all`,
+      {
+        headers: getAuthHeaders(),
+      }
     );
 
-    // Transform the data into the desired format
-    const mappedData: PlayerMapped[] = response.data.map((player) => ({
+    return response.data.map((player) => ({
       _id: player._id,
       Name: player.name,
       University: player.university,
@@ -49,46 +62,26 @@ export const getAllPlayers = async (): Promise<PlayerMapped[] | null> => {
       "Overs Bowled": player.oversBowled,
       "Runs Conceded": player.runsConceded,
     }));
-
-    return mappedData;
   } catch (error) {
-    console.error("Error fetching data:", error);
-    return null; // Return null in case of an error
+    console.error("Error fetching players:", error);
+    return null;
   }
 };
 
-// Function to add a player to the team using MongoDB ObjectIds
 export const addPlayerToTeam = async (
   userId: string,
   playerId: string
 ): Promise<any> => {
   try {
-    // Log the request payload for debugging
-    console.log("Adding player with payload:", { userId, playerId });
-
-    // Make sure we're sending the data in the format expected by the server
     const response = await axios.post(
-      "http://localhost:5000/api/team/add",
-      {
-        userId: userId,
-        playerId: playerId,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      `${API_BASE_URL}/team/add`,
+      { userId, playerId },
+      { headers: getAuthHeaders() }
     );
 
-    console.log("Add player response:", response.data);
     return response.data;
   } catch (error: any) {
     console.error("Error adding player to team:", error);
-    if (error.response) {
-      console.error("Response data:", error.response.data);
-      console.error("Response status:", error.response.status);
-      console.error("Response headers:", error.response.headers);
-    }
     throw error;
   }
 };
@@ -98,44 +91,29 @@ export const removePlayerFromTeam = async (
   playerId: string
 ): Promise<any> => {
   try {
-    console.log("Removing player with payload:", { userId, playerId });
-
     const response = await axios.post(
-      "http://localhost:5000/api/team/remove",
-      {
-        userId: userId,
-        playerId: playerId,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      `${API_BASE_URL}/team/remove`,
+      { userId, playerId },
+      { headers: getAuthHeaders() }
     );
 
-    console.log("Remove player response:", response.data);
     return response.data;
   } catch (error: any) {
     console.error("Error removing player from team:", error);
-    if (error.response) {
-      console.error("Response data:", error.response.data);
-      console.error("Response status:", error.response.status);
-      console.error("Response headers:", error.response.headers);
-    }
     throw error;
   }
 };
 
-export const getUserTeam = async (
-  userId: string
-): Promise<(PlayerMapped & { Price: number })[] | null> => {
+export const getUserTeam = async (): Promise<
+  (PlayerMapped & { Price: number })[] | null
+> => {
   try {
-    const response = await axios.get(
-      `http://localhost:5000/api/team/get-user-team/${userId}`
-    );
+    const response = await axios.get(`${API_BASE_URL}/team/get-user-team`, {
+      headers: getAuthHeaders(),
+    });
 
     if (response.data && Array.isArray(response.data)) {
-      const mappedData = response.data.map((entry) => ({
+      return response.data.map((entry) => ({
         _id: entry.player._id,
         Name: entry.player.name,
         University: entry.player.university,
@@ -148,8 +126,6 @@ export const getUserTeam = async (
         "Runs Conceded": entry.player.runsConceded,
         Price: entry.price,
       }));
-
-      return mappedData;
     }
 
     return [];

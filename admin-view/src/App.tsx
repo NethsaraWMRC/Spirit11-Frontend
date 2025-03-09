@@ -9,23 +9,37 @@ import Tournement from "../src/pages/UiElements/tournement";
 
 import Players from "./pages/Players";
 
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/common/ProtectedRoute";
+
+
 export default function App() {
   return (
     <>
       <Router>
-        <ScrollToTop />
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route index path="/" element={<Tournement />} />
-            <Route path="/tournementSummary" element={<Tournement />} />
 
-            <Route path="/players" element={<Players />} />
-          </Route>
+        <AuthProvider>
+          <ScrollToTop />
+          <Routes>
+            {/* Auth Layout */}
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
 
-          {/* Auth Layout */}
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-        </Routes>
+            {/* Protected Routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route element={<AppLayout />}>
+                <Route index path="/" element={<Home />} />
+                <Route path="/tournementSummary" element={<Tournement />} />
+                <Route path="/players" element={<Players />} />
+               
+              </Route>
+            </Route>
+
+            {/* Fallback Route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
+
       </Router>
     </>
   );
