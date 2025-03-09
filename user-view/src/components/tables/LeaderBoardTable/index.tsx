@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getLeaderboard } from "../../../api/leaderboard"; // Import the API function
 import {
   Table,
   TableBody,
@@ -10,34 +11,29 @@ import TablePagination from "../../Paginations/tablePagination";
 
 interface Order {
   id: number;
-  userName: string;
+  username: string;
   totalPoints: string;
 }
-
-// Define the table data using the interface
-const tableData: Order[] = [
-  { id: 1, userName: "Lindsey Curtis", totalPoints: "3900" },
-  { id: 2, userName: "Kaiya George", totalPoints: "24900" },
-  { id: 3, userName: "Zain Geidt", totalPoints: "12700" },
-  { id: 4, userName: "Abram Schleiferr", totalPoints: "2800" },
-  { id: 5, userName: "Carla George", totalPoints: "4500" },
-  { id: 6, userName: "John Doe", totalPoints: "5000" },
-  { id: 7, userName: "Jane Smith", totalPoints: "6000" },
-  { id: 8, userName: "Alice Johnson", totalPoints: "7000" },
-  { id: 9, userName: "Bob Brown", totalPoints: "8000" },
-  { id: 10, userName: "Charlie Davis", totalPoints: "9000" },
-  { id: 11, userName: "Eve White", totalPoints: "10000" },
-  { id: 12, userName: "Frank Black", totalPoints: "11000" },
-];
 
 export default function LeaderBoardTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [tableData, setTableData] = useState<Order[]>([]); // Initialize with empty array
+  const [loading, setLoading] = useState(true); // Add loading state
   const itemsPerPage = 8;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getLeaderboard();
+      setTableData(data.leaderboard);
+      setLoading(false); // Set loading to false after data is fetched
+    };
+    fetchData();
+  }, []);
 
   // Filter the data based on search term
   const filteredData = tableData.filter((order) => {
-    return order.userName.toLowerCase().includes(searchTerm.toLowerCase());
+    return order.username?.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   // Calculate pagination
@@ -78,62 +74,68 @@ export default function LeaderBoardTable() {
 
       <div className="max-w-full overflow-x-auto">
         <div className="min-w-[1102px]">
-          <Table>
-            {/* Table Header */}
-            <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-              <TableRow>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Rank
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  UserName
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Total Points
-                </TableCell>
-              </TableRow>
-            </TableHeader>
-
-            {/* Table Body */}
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {paginatedData.length > 0 ? (
-                paginatedData.map((order, index) => (
-                  <TableRow key={order.id}>
-                    <TableCell className="px-5 py-4 sm:px-6 text-start">
-                      <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                        {(currentPage - 1) * itemsPerPage + index + 1}
-                      </span>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                        {order.userName}
-                      </span>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                        {order.totalPoints}
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
+          {loading ? (
+            <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+              Loading...
+            </div>
+          ) : (
+            <Table>
+              {/* Table Header */}
+              <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                 <TableRow>
-                  <TableCell className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                    No results found. Try adjusting your search or filters.
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    Rank
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    UserName
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    Total Points
                   </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
+              </TableHeader>
+
+              {/* Table Body */}
+              <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                {paginatedData.length > 0 ? (
+                  paginatedData.map((order, index) => (
+                    <TableRow key={`${order.id}-${index}`}>
+                      <TableCell className="px-5 py-4 sm:px-6 text-start">
+                        <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                          {(currentPage - 1) * itemsPerPage + index + 1}
+                        </span>
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                        <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                          {order.username}
+                        </span>
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                        <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                          {order.totalPoints}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                      No results found. Try adjusting your search or filters.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          )}
         </div>
       </div>
 
