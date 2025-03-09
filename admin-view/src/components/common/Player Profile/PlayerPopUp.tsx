@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 interface Player {
   Name: string;
@@ -25,11 +25,25 @@ const PlayerPopUp: React.FC<ViewDetailsModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    // Store the original overflow style
+    const originalOverflow = document.body.style.overflow;
+    // Prevent scrolling on the body when modal is open
+    document.body.style.overflow = "hidden";
+
+    // Clean up when component unmounts
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden">
       {/* Backdrop with blur effect */}
       <div
-        className="fixed inset-0 backdrop-blur-sm bg-black bg-opacity-60"
+        className="fixed inset-0 backdrop-blur-sm bg-opacity-60"
         onClick={onClose}
         style={{ backdropFilter: "blur(4px)" }}
       ></div>

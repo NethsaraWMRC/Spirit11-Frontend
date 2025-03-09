@@ -1,13 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useModal } from '../hooks/useModal';
 import { Modal } from '../components/ui/modal';
 import PlayerAddForm from '../components/common/Player Profile/PlayerAddForm';
-import { Player, playersData } from '../components/common/Player Profile/PlayersData';
+import { Player } from '../components/common/Player Profile/PlayersData';
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '../components/ui/table';
 import PlayerPopUp from '../components/common/Player Profile/PlayerPopUp';
 import PlayerEditForm from '../components/common/Player Profile/PlayerEditForm';
+import { fetchPlayers, deletePlayer, updatePlayer, createPlayer } from '../api/player';
 
 const Players = () => {
+  const [players, setPlayers] = useState<Player[]>([]);
+    const [, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     // Modal for adding a new player
     const { isOpen, openModal, closeModal } = useModal();
 // Modal for editing a player
@@ -19,14 +23,35 @@ const Players = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [playerToEdit, setPlayerToEdit] = useState<Player | null>(null);
 
+  
+    // Fetch players when the component mounts
+    useEffect(() => {
+      const loadPlayers = async () => {
+          try {
+              setLoading(true);
+              const data = await fetchPlayers();
+              setPlayers(data);
+              setError(null);
+          } catch (err) {
+              console.error("Failed to fetch players:", err);
+              setError("Failed to load players. Using fallback data.");
+              setPlayers([]);
+          } finally {
+              setLoading(false);
+          }
+      };
+      
+      loadPlayers();
+  }, []);
+
   // Get unique categories for the filter dropdown
   const categories = [
     "All",
-    ...new Set(playersData.map((player) => player.Category)),
+    ...new Set(players.map((player) => player.Category)),
   ];
 
   // Filter the data based on search term and category filter
-  const filteredData = playersData.filter((player) => {
+  const filteredData = players.filter((player) => {
     const matchesSearch = player.Name.toLowerCase().includes(
       searchTerm.toLowerCase()
     );
@@ -48,23 +73,72 @@ const Players = () => {
     openEditModal();
 };
 
-const handleUpdatePlayer = (updatedPlayer: Player) => {
-    console.log("Player updated:", updatedPlayer);
-    // Here you would typically update the player in your data source
-    // For now, we'll just log the updated player
+const handleUpdatePlayer = async (updatedPlayer: Player) => {
+  if (!updatedPlayer.id) {
+      setError("Cannot update player without ID");
+      return;
+  }
+  
+  try {
+      const result = await updatePlayer(updatedPlayer.id, updatedPlayer);
+      // Update the local state with the updated player
+      setPlayers(prevPlayers => 
+          prevPlayers.map(player => 
+              player.id === updatedPlayer.id ? result : player
+          )
+      );
+      closeEditModal();
+  } catch (err) {
+      console.error("Failed to update player:", err);
+      setError("Failed to update player");
+  }
 };
 
-const handleDeleteClick = (player: Player) => {
-    if (window.confirm(`Are you sure you want to delete ${player.Name}?`)) {
-        console.log("Deleting player:", player);
-        // Here you would typically delete the player from your data source
-    }
+const handleAddPlayer = async (newPlayer: Omit<Player, 'id'>) => {
+  try {
+    setLoading(true);
+    console.log("Adding player:", newPlayer);
+    const addedPlayer = await createPlayer(newPlayer);
+    
+    setPlayers(prevPlayers => [...prevPlayers, addedPlayer]);
+    
+    closeModal();
+      } catch (err) {
+    console.error("Failed to add player:", err);
+    setError("Failed to add player. Please try again.");
+  } finally {
+    setLoading(false);
+  }
 };
 
+const handleDeleteClick = async (player: Player) => {
+  if (!player.id) {
+      setError("Cannot delete player without ID");
+      return;
+  }
+
+  if (window.confirm(`Are you sure you want to delete ${player.Name}?`)) {
+      try {
+          await deletePlayer(player.id);
+          // Remove the player from the local state
+          setPlayers(prevPlayers => 
+              prevPlayers.filter(p => p.id !== player.id)
+          );
+      } catch (err) {
+          console.error("Failed to delete player:", err);
+          setError("Failed to delete player");
+      }
+  }
+};
 
   
     return (
         <>
+         {error && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    {error}
+                </div>
+            )}
             <div className="mb-6 flex justify-end">
                 <button
                     onClick={openModal}
@@ -93,8 +167,7 @@ const handleDeleteClick = (player: Player) => {
             {/* Add Player Modal */}
             <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-8">
-                    {/* Pass closeModal to PlayerAddForm */}
-                    <PlayerAddForm closeModal={closeModal} />
+                    <PlayerAddForm closeModal={closeModal} onSave={handleAddPlayer} />
                 </div>
             </Modal>
 
