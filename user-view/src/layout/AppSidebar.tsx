@@ -31,6 +31,13 @@ const navItems: NavItem[] = [
     name: "Dashboard",
     subItems: [{ name: "Ecommerce", path: "/", pro: false }],
   },
+
+  {
+    icon: <CalenderIcon />,
+    name: "Select Players",
+    path: "/select-players",
+  },
+
   {
     icon: <CalenderIcon />,
     name: "Calendar",
@@ -51,6 +58,7 @@ const navItems: NavItem[] = [
     icon: <TableIcon />,
     subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
   },
+
   {
     name: "Pages",
     icon: <PageIcon />,
