@@ -264,7 +264,7 @@ const AppSidebar: React.FC = () => {
                 width={150}
                 height={40}
               /> */}
-              <h1 className="text-2xl font-semibold text-center ">Admin</h1>
+              <h1 className="text-2xl font-semibold text-center">Admin</h1>
             </>
           ) : (
             <img
