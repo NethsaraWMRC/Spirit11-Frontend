@@ -104,16 +104,13 @@ export const removePlayerFromTeam = async (
   }
 };
 
-export const getUserTeam = async (
-  userId: string
-): Promise<(PlayerMapped & { Price: number })[] | null> => {
+export const getUserTeam = async (): Promise<
+  (PlayerMapped & { Price: number })[] | null
+> => {
   try {
-    const response = await axios.get(
-      `${API_BASE_URL}/team/get-user-team/${userId}`,
-      {
-        headers: getAuthHeaders(),
-      }
-    );
+    const response = await axios.get(`${API_BASE_URL}/team/get-user-team`, {
+      headers: getAuthHeaders(),
+    });
 
     if (response.data && Array.isArray(response.data)) {
       return response.data.map((entry) => ({
