@@ -65,53 +65,46 @@ npm run dev
 
 ### Player Management
 
-View comprehensive player statistics including batting average, strike rate, bowling economy
-Filter and search players by various criteria
-Add new players to the database
-View detailed player profiles with performance metrics
-
-### Spiriter AI Assistant
-
-AI-powered chatbot to answer queries about cricket players
-Get insights on player statistics and performance
-Receive recommendations for optimal team composition
-Natural language processing for conversational interactions
+-View comprehensive player statistics including batting average, strike rate, bowling economy
+-Filter and search players by various criteria
+-Add new players to the database
+-View detailed player profiles with performance metrics
 
 ### Tournament Management
 
-View tournament summaries and statistics
-Track team and player performance across matches
-Data visualization for key performance indicators
+-View tournament summaries and statistics
+-Track team and player performance across matches
+-Data visualization for key performance indicators
 
 ### User Interface
 
-Responsive design for mobile and desktop views
-Dark/light mode toggle
-Interactive tables and charts
-Pop-up modals for detailed information
+-Responsive design for mobile and desktop views
+-Dark/light mode toggle
+-Interactive tables and charts
+-Pop-up modals for detailed information
 
 ## 🧪 Using the Application
 
 ### Player Management
 
-Navigate to the "Players" section from the sidebar
-View the player list with key statistics
-Use search and filters to find specific players
-Click on a player to view detailed statistics
-Admin users can add or remove players marked as "New Players"
+-Navigate to the "Players" section from the sidebar
+-View the player list with key statistics
+-Use search and filters to find specific players
+-Click on a player to view detailed statistics
+-Admin users can add or remove players marked as "New Players"
 
 ### Admin Features
 
-View tournament summaries with aggregated statistics
-Monitor player performance across tournaments
-Track team statistics and match results
+-View tournament summaries with aggregated statistics
+-Monitor player performance across tournaments
+-Track team statistics and match results
 
 ## 🛠️ Technology Stack
 
-Frontend: React with TypeScript
-UI Framework: Tailwind CSS
-Data Visualization: Custom chart components
-Routing: React Router
+-Frontend: React with TypeScript
+-UI Framework: Tailwind CSS
+-Data Visualization: Custom chart components
+-Routing: React Router
 
 ```
 
