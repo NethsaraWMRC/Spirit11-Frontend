@@ -29,14 +29,14 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
-    icon: <GroupIcon />,
-    name: "My Team",
-    path: "/my-team",
-  },
-  {
     icon: <ShootingStarIcon />,
     name: "LeaderBoard",
     path: "/leader-board",
+  },
+  {
+    icon: <GroupIcon />,
+    name: "My Team",
+    path: "/my-team",
   },
   {
     icon: <GridIcon />,

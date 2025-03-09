@@ -179,6 +179,12 @@ export default function UsersTeamTable() {
                                 >
                                     Value
                                 </TableCell>
+                                <TableCell
+                                    isHeader
+                                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                                >
+                                    Actions
+                                </TableCell>
                             </TableRow>
                         </TableHeader>
 
@@ -215,6 +221,11 @@ export default function UsersTeamTable() {
                                         </TableCell>
                                         <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                                             {order.value}
+                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg">
+                                                View
+                                            </button>
                                         </TableCell>
                                     </TableRow>
                                 ))
