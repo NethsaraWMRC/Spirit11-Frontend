@@ -42,6 +42,11 @@ const navItems: NavItem[] = [
     subItems: [{ name: "Ecommerce", path: "/", pro: false }],
   },
   {
+    icon: <GridIcon />,
+    name: "Tournement Summary",
+    subItems: [{ name: "Summary", path: "/tournementSummary", pro: false }],
+  },
+  {
     icon: <CalenderIcon />,
     name: "Calendar",
     path: "/calendar",

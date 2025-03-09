@@ -137,7 +137,7 @@ export default function BasicTableOne() {
         <div className="relative">
           <input
             type="text"
-            placeholder="Search by name, role, or project..."
+            placeholder="Search by Tournement, role, or project..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="px-4 py-2 pr-10 border border-gray-200 rounded-lg w-64 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-white/[0.05] dark:border-white/[0.1] dark:text-white"
