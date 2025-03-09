@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
@@ -14,11 +20,30 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [username, setUsername] = useState<string | null>(null);
-
   const navigate = useNavigate();
+
+  // Load authentication state from localStorage
+  const [accessToken, setAccessToken] = useState<string | null>(() =>
+    localStorage.getItem("accessToken")
+  );
+  const [username, setUsername] = useState<string | null>(() =>
+    localStorage.getItem("username")
+  );
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+    () => !!localStorage.getItem("accessToken")
+  );
+
+  // Effect to update authentication state if localStorage changes
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    const uname = localStorage.getItem("username");
+
+    if (token) {
+      setIsAuthenticated(true);
+      setAccessToken(token);
+      setUsername(uname);
+    }
+  }, []);
 
   const login = (token: string, uname: string) => {
     setIsAuthenticated(true);
@@ -34,7 +59,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     setUsername(null);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("username");
-    navigate("/login", { replace: true });
+    navigate("/signin", { replace: true });
   };
 
   return (
@@ -46,7 +71,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-// Hook to use AuthContext
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
